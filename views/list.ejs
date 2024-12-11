@@ -1,0 +1,172 @@
+<% layout("/boilerplate")%>
+<style>
+  .filters{
+    display:flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: flex-start;
+  }
+  .filter{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    margin: 1rem;
+    font-size: 1rem;
+  }
+  .filter:hover{
+    opacity: 1;
+    cursor: pointer;
+  }
+  .tax_info{
+  opacity: 0;
+  }
+  .tax-toggle{
+    border:1px solid gray;
+    border-radius: 0.5rem;
+    padding: 5px;
+    height: 2.6rem;
+    width: 250px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+.collapsableFilters{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+</style>
+<body>
+  <p class="d-inline-flex gap-1">
+    <button class="btn btn-outline-secondary mt-2" style="color: black !important;"type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+      Filters
+    </button>
+  </p>
+  <div class="collapse collapsableFilters" id="collapseExample">
+    <div class="card card-body">
+      <div class="filters">
+        <div class="filter">
+          <div><i class="fa-solid fa-fire"></i></div>
+          <p>Trending</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-bed"></i></div>
+          <p>Rooms</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-mountain-city"></i></div>
+          <p>Iconic Cities</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-mountain"></i></div>
+          <p>Mountains</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-train-tram"></i></div>
+          <p>Hill Station</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-person-swimming"></i></div>
+          <p>Pools</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-campground"></i></div>
+          <p>Camping</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-tractor"></i></i></div>
+          <p>Farms</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-regular fa-snowflake"></i></div>
+          <p>Snow</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-umbrella-beach"></i></div>
+          <p>Beach</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-volleyball"></i></div>
+          <p>Games</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-sun"></i></div>
+          <p>Desert</p>
+        </div>
+        <div class="filter">
+          <div><i class="fa-solid fa-cloud-rain"></i></div>
+          <p>Rainy</p>
+        </div>
+        <div class="tax-toggle">
+          <div class="form-check-reverse form-switch" >
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault">
+            <label class="form-check-label" for="flexSwitchCheckDefault">Display total after taxes</label>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+  </div>
+    <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1">
+        <% for(let list of listings) { %>
+          <div class="outer_card">
+            <a href="/listings/<%=list._id%>" style="text-decoration: none;">
+            <div class="card maincard" style="width: 23rem;">
+                <img src="<%=list.image.url%>" class="card-img-top" alt="img" style="height: 18rem; margin:auto;">
+                <div class="card-body">
+                  <p class="card-text">
+                    <b><%=list.title%></b>
+                    <br>
+                    &#8377;<%= list.price ? list.price.toLocaleString("en-IN") : "0" %>/night
+                    <i class="tax_info"style="color: red;">+ 18% GST</i>
+                </p>
+                </div>
+            </div>
+            </a>
+          </div>
+        <%}%>
+    </div>
+</body>
+
+<script>
+  let taxSwitch=document.getElementById("flexSwitchCheckDefault");
+  taxSwitch.addEventListener("click",()=>{
+    let tax=document.getElementsByClassName("tax_info");
+    for(info of tax)
+  {
+    if(info.style.opacity!=1)
+    info.style.opacity=1;
+  else
+  {
+    info.style.opacity=0;
+  }
+  }
+  })
+  const listing = <%- JSON.stringify(listings) %>; // Parse listings data
+  const input = document.querySelector('#searchInput');
+  const button = document.querySelector('#btn-search')
+
+// Add an event listener for input changes or search submission
+button.addEventListener("click", (e) => {
+  e.preventDefault()
+    const searchValue = input.value.toLowerCase(); // Get the input value
+    // Filter the listings and show/hide items
+    const filter = []
+    listing.forEach((item, index) => {
+        const location = listing[index].location.toLowerCase();
+        if (location.includes(searchValue)) {
+          // console.log(item);
+          filter.push(item)
+        } 
+    });
+    if(filter.length == 0) return console.log("No matches found!");
+    console.log(filter);
+});
+
+
+
+</script>
